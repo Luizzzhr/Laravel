@@ -6,26 +6,34 @@
 
 <div id="search-container" class="cool-md-12">
     <h1>Busque o evento</h1>.
-    <form action="">
+    <form action="/" method="GET">
         <input type="text" id="search" name="search" class="form-control" placeholder="Procurar...">
     </form>
 </div>
 <div id="events-container" class="col-md-12">
-        <h2>Proximo Eventos</h2>
-        <p class="subtitle">Veja os eventos nos proximos dias</p>
+    @if($search)
+        <h2>Buscando por:{{ $search }}</h2>
+    @else
+    <h2>Proximos eventos</h2>
+    <p class="subtitle">Veja os eventos nos proximos dias</p>
+    @endif
         <div id="cards-container" class="row">
             @foreach($events as $event)
               <div class="card col-md-3">
-                  <img src="/img/1338376.jpg" alt="{{ $event->title }}">
+                  <img src="/img/events/{{ $event->image }}" alt="{{ $event->title }}">
                   <div class="card-body">
-                      <p class="card-date">24/03/2022</p>
-                      <h5 class="card-title">{{ $event->    title }}</h5>
+                      <p class="card-date">{{ date('d/m/Y', strtotime($event->date)) }}</p>
+                      <h5 class="card-title">{{ $event->title }}</h5>
                       <p class="card-participants">X Participantes</p>
-                      <a href="#" class="btn btn-primary">Saber mais</a>
+                      <a href="/events/{{ $event->id }}" class="btn btn-primary">Saber mais</a>
                   </div>
             </div>  
             @endforeach
-
+         @if(count($events) == 0 && $search)
+            <p>Não foi possivel encontrar nenhum evento com {{ $search }}! <a href="/">Ver todos...</a></p>
+            @elseif(count($events) == 0)
+            <p>Não há eventos disponiveis</p>
+        @endif
         </div>
 </div>
         @endsection
